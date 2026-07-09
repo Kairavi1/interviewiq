@@ -16,7 +16,7 @@ export default function DashboardHeader({ session }: Props) {
   const tabs = [
     {
       name: "Prepare",
-      href: "/dashboard",
+      href: "/dashboard/prepare",
     },
     {
       name: "Interview",
@@ -35,7 +35,7 @@ export default function DashboardHeader({ session }: Props) {
   return (
     <header className="w-full border-b border-[#e8e5dd] bg-white">
       {/* Top */}
-      <div className="mx-auto flex h-24 w-[95%] items-center justify-between">
+      <div className="mx-auto flex h-24 w-[95%] items-center justify-between border-b border-[#eceae3]">
         <div className="flex items-center gap-5">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#cde2fb]">
             <Brain size={28} strokeWidth={2.5} className="text-[#184f95]" />

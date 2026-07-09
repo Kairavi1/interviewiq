@@ -82,7 +82,7 @@ export default function Home() {
             "use server";
 
             await signIn("google", {
-              redirectTo: "/dashboard",
+              redirectTo: "/dashboard/prepare",
             });
           }}
         >
