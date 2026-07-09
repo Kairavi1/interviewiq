@@ -1,3 +1,4 @@
+import { signIn } from "@/auth";
 import { Brain } from "lucide-react";
 
 export default function Header() {
@@ -17,14 +18,27 @@ export default function Header() {
           </h1>
         </div>
 
-        <button className="flex h-13 items-center gap-3 rounded-xl font-semibold border border-zinc-300 bg-white px-5 text-[20px] text-black transition-colors duration-200 hover:bg-zinc-50">
-          <img
-            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-            alt="Google"
-            className="h-5 w-5"
-          />
-          <span>Sign in with Google</span>
-        </button>
+        <form
+          action={async () => {
+            "use server";
+
+            await signIn("google", {
+              redirectTo: "/dashboard",
+            });
+          }}
+        >
+          <button
+            type="submit"
+            className="flex h-13 items-center gap-3 rounded-xl border border-zinc-300 bg-white px-5 text-[20px] font-semibold text-black transition-colors duration-200 hover:bg-zinc-50"
+          >
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google"
+              className="h-5 w-5"
+            />
+            <span>Sign in with Google</span>
+          </button>
+        </form>
       </div>
     </header>
   );

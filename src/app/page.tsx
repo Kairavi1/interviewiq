@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import {
   Activity,
   Brain,
@@ -6,6 +5,8 @@ import {
   FileSearch2,
   RefreshCw,
 } from "lucide-react";
+import Header from "../components/Header";
+import { signIn } from "@/auth";
 
 const steps = [
   {
@@ -76,14 +77,24 @@ export default function Home() {
           get scored on every answer.
         </p>
 
-        <button className="mt-12 flex h-14 items-center gap-3 rounded-xl border border-zinc-300 bg-white px-6 text-lg font-semibold text-black shadow-sm transition hover:bg-zinc-50">
-          <img
-            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-            alt="Google"
-            className="h-5 w-5"
-          />
-          Start with Google — it's free
-        </button>
+        <form
+          action={async () => {
+            "use server";
+
+            await signIn("google", {
+              redirectTo: "/dashboard",
+            });
+          }}
+        >
+          <button className="mt-12 flex h-14 items-center gap-3 rounded-xl border border-zinc-300 bg-white px-6 text-lg font-semibold text-black shadow-sm transition hover:bg-zinc-50">
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google"
+              className="h-5 w-5"
+            />
+            Start with Google — it's free
+          </button>
+        </form>
 
         <p className="mt-5 text-lg font-medium text-[#898781]">
           No credit card · Sessions saved to your account
