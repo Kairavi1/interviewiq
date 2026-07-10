@@ -71,7 +71,7 @@ export default function PreparePage() {
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between">
           <p className="text-[16px] font-medium text-[#898781]">
             12 questions will be generated across 4 categories.
           </p>
