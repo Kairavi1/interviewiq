@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum SessionStatus {
+  PREPARING
+  READY
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum Seniority {
+  JUNIOR
+  MID
+  SENIOR
+}
+
+enum FocusArea {
+  ALL
+  TECHNICAL
+  BEHAVIORAL
+}
+
+enum QuestionCategory {
+  TECHNICAL
+  BEHAVIORAL
+  SYSTEM_DESIGN
+  CULTURE_FIT
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model User {
+  id        String @id @default(cuid())
+
+  email     String @unique
+  name      String?
+  image     String?
+
+  sessions  InterviewSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model InterviewSession {
+  id String @id @default(cuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  company String
+  role String
+  title String?
+
+  jobDescription String
+
+  resumePath String?
+  resumeText String?
+
+  seniority Seniority
+  focusArea FocusArea
+
+  status SessionStatus @default(PREPARING)
+
+  overallScore Float?
+  technicalScore Float?
+  behavioralScore Float?
+  cultureFitScore Float?
+
+  questions Question[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Question {
+  id String @id @default(cuid())
+
+  sessionId String
+  session InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  order Int
+
+  category QuestionCategory
+  difficulty Difficulty
+
+  question String
+
+  expectedAnswer String?
+
+  answer Answer?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Answer {
+  id String @id @default(cuid())
+
+  questionId String @unique
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  answer String
+
+  score Float?
+
+  feedback String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
