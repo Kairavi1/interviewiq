@@ -2,23 +2,40 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { FileText } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
+import { uploadResume } from "@/src/actions/uploadResume";
 
-type Props = {
-  onFileSelect: (file: File) => void;
+type ResumeDropzoneProps = {
+  onFileSelect: (file: File, path: string) => void;
 };
 
-export default function ResumeDropzone({ onFileSelect }: Props) {
+export default function ResumeDropzone({ onFileSelect }: ResumeDropzoneProps) {
+  const [uploading, setUploading] = useState(false);
   const [fileName, setFileName] = useState("");
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
       if (!acceptedFiles.length) return;
 
       const file = acceptedFiles[0];
 
-      setFileName(file.name);
-      onFileSelect(file);
+      setUploading(true);
+
+      try {
+        const formData = new FormData();
+        formData.append("resume", file);
+
+        const path = await uploadResume(formData);
+
+        setFileName(file.name);
+
+        onFileSelect(file, path);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to upload resume.");
+      } finally {
+        setUploading(false);
+      }
     },
     [onFileSelect],
   );
@@ -47,15 +64,27 @@ export default function ResumeDropzone({ onFileSelect }: Props) {
       >
         <input {...getInputProps()} />
 
-        <FileText size={54} strokeWidth={1.8} className="text-[#8b897f]" />
+        {uploading ? (
+          <>
+            <Loader2 size={50} className="animate-spin text-[#184f95]" />
 
-        <h3 className="mt-6 text-[20px] font-semibold text-[#4b4b48]">
-          {fileName || "Drop your PDF here"}
-        </h3>
+            <h3 className="mt-6 text-[20px] font-semibold text-[#4b4b48]">
+              Uploading...
+            </h3>
+          </>
+        ) : (
+          <>
+            <FileText size={54} strokeWidth={1.8} className="text-[#8b897f]" />
 
-        <p className="mt-2 text-[18px] text-[#898781]">
-          {fileName ? "Click to replace" : "or click to browse"}
-        </p>
+            <h3 className="mt-6 text-[20px] font-semibold text-[#4b4b48]">
+              {fileName || "Drop your PDF here"}
+            </h3>
+
+            <p className="mt-2 text-[18px] text-[#898781]">
+              {fileName ? "Click to replace" : "or click to browse"}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
